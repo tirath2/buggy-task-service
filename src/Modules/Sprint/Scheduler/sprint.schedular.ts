@@ -60,10 +60,16 @@ export class SprintScheduleService implements OnModuleInit {
       sprintProjectMap[item.projectId] = item;
     });
 
+    console.log(sprintProjectMap);
+
     const sprintsToAdd: Sprint[] = [];
     sprintDetails?.map((item) => {
       const sprint = new Sprint();
       const onGoingSprint = sprintProjectMap[item.projectId];
+      if (!onGoingSprint) {
+        return;
+      }
+      console.log(item);
       sprint.name =
         'Sprint-' + (parseInt(onGoingSprint?.name?.split('-')?.[1] || '0') + 1);
       sprint.status = SPRINT_STATUS.UPCOMING;

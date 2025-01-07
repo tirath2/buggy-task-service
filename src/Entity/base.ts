@@ -43,6 +43,6 @@ export class BaseEntity {
 
   protected getLoggedInUserId(): number {
     const user = (global as any).currentUser;
-    return user.id;
+    return user?.id;
   }
 }

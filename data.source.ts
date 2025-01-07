@@ -8,6 +8,8 @@ import { TemplateStatus } from 'src/Entity/template-status';
 import { SprintDetail } from 'src/Entity/sprint-details.entity';
 import { Sprint } from 'src/Entity/sprint.entitiy';
 import { SprintExtension } from 'src/Entity/sprint-extentions.entity';
+import { TaskType } from 'src/Entity/task.type.entity';
+import { TaskPriority } from 'src/Entity/task-priority.entity';
 export const dbdatasource: DataSourceOptions = {
   migrationsTableName: 'task_migrations',
   type: 'postgres',
@@ -29,6 +31,8 @@ export const dbdatasource: DataSourceOptions = {
     SprintDetail,
     Sprint,
     SprintExtension,
+    TaskType,
+    TaskPriority,
   ],
   migrations: ['src/migrations/**/*{.ts,.js}'],
   subscribers: ['src/subscriber/**/*{.ts,.js}'],

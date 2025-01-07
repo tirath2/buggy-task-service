@@ -25,17 +25,14 @@ export class Task extends BaseEntity {
   @Column({ name: 'project_id', type: 'integer', nullable: false })
   projectId: number;
 
-  @Column({ default: 'STORY', type: 'varchar', nullable: false })
-  type: string;
-
   @Column({ name: 'assigned_to', type: 'integer', nullable: true })
   assignedTo: number;
 
   @Column({ type: 'timestamp', nullable: true, name: 'due_date' })
   dueDate: Date;
 
-  @Column({ enum: ['high', 'Medium', 'Low'], default: 'Low' })
-  priority: string;
+  @Column({ type: 'integer', nullable: true, name: 'task_priority_id' })
+  taskPriorityId: number;
 
   @Column('varchar', { nullable: true, array: true })
   tags: string[];
@@ -48,4 +45,7 @@ export class Task extends BaseEntity {
 
   @Column({ type: 'integer', nullable: true, name: 'sprint_id' })
   sprintId: number;
+
+  @Column({ type: 'integer', nullable: true, name: 'task_type_id' })
+  taskTypeId: number;
 }

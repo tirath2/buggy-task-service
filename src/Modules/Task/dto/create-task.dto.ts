@@ -5,6 +5,7 @@ import {
   IsArray,
   ValidateNested,
   IsNotEmpty,
+  IsNumber,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -34,11 +35,14 @@ export class CreateTaskDto {
   @IsInt()
   statusId: number;
 
+  @IsInt()
+  taskTypeId: number;
+
   @IsString()
   dueDate: Date;
 
-  @IsString()
-  priority: string;
+  @IsNumber()
+  taskPriorityId: number;
 
   @IsArray()
   @Type(() => String)

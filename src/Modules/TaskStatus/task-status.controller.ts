@@ -12,6 +12,7 @@ import { TaskStatusService } from './task-status.service';
 import { AddStatusDto } from './dto/add-task-status.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { AddStatusAndTypeDto } from './dto/add-task-status-and-type.dto';
 
 @Controller('status')
 @UseGuards(AuthGuard('jwt'))
@@ -23,6 +24,12 @@ export class TaskStatusController {
   @ApiBody({ type: [AddStatusDto] })
   async addStatus(@Body() statusDto: AddStatusDto[]) {
     return this.statusService.addStatus(statusDto);
+  }
+
+  @Post('add/status-and-type')
+  @ApiBody({ type: [AddStatusDto] })
+  async addStatusAndType(@Body() statusAndTypeDto: AddStatusAndTypeDto) {
+    return this.statusService.addStatusAndType(statusAndTypeDto);
   }
 
   @Get('fetch/:projectId')

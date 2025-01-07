@@ -31,14 +31,14 @@ export class TaskService {
         title,
         description,
         parentId,
-        type,
         assignedTo,
         apiLogs,
         projectId,
         dueDate,
-        priority,
+        taskPriorityId,
         statusId,
         tags,
+        taskTypeId,
       } = createTaskDto;
 
       // Create a new task
@@ -46,13 +46,13 @@ export class TaskService {
       newTask.title = title;
       newTask.description = description;
       newTask.parentTaskId = parentId;
-      newTask.type = type;
       newTask.projectId = projectId;
       newTask.dueDate = dueDate;
-      newTask.priority = priority;
+      newTask.taskPriorityId = taskPriorityId;
       newTask.statusId = statusId;
       newTask.tags = tags;
       newTask.assignedTo = assignedTo;
+      newTask.taskTypeId = taskTypeId;
 
       const taskRepo = queryRunner.manager.getRepository(Task);
 
@@ -85,14 +85,21 @@ export class TaskService {
         .addSelect('t.description', 'description')
         .addSelect('t.status_id', 'statusId')
         .addSelect('s.name', 'statusName')
-        .addSelect('t.priority', 'priority')
+        .addSelect('t.task_priority_id', 'taskPriorityId')
+        .addSelect('tp.name', 'priority')
         .addSelect('u.name', 'assignedToName')
-        .addSelect('t.type', 'type')
+        .addSelect('t.task_type_id', 'taskTypeId')
         .addSelect('t.assigned_to', 'assignedTo')
+        .addSelect('t.created_by', 'createdBy')
+        .addSelect('t.created_at', 'createdAt')
+        .addSelect('t.due_date', 'dueDate')
         .addSelect('t.tags', 'tags')
+        .addSelect('tt.name', 'type')
         .addSelect('t.id', 'id')
         .leftJoin('users', 'u', '"u".id = t.assignedTo')
         .leftJoin('task_status', 's', '"t".status_id = s.id')
+        .leftJoin('task_type', 'tt', '"t".task_type_id = tt.id')
+        .leftJoin('task_priority', 'tp', '"t".task_priority_id = tp.id')
         .where(
           `t.project_id=${id}  ${
             sprintId ? ' and t.sprint_id=' + sprintId : ''
@@ -168,13 +175,15 @@ export class TaskService {
         .select('t.title', 'title')
         .addSelect('t.description', 'description')
         .addSelect('t.status_id', 'statusId')
-        .addSelect('t.priority', 'priority')
+        .addSelect('t.task_priority_id', 'taskPriorityId')
+        .addSelect('tp.name', 'priority')
         .addSelect('p.name', 'projectName')
         .addSelect('p.id', 'projectId')
         .addSelect('s.name', 'statusName')
         .addSelect('t.id', 'id')
         .leftJoin('projects', 'p', '"p".id = t.project_id')
-        .leftJoin('task_status', 's', '"t".status_id = s.id');
+        .leftJoin('task_status', 's', '"t".status_id = s.id')
+        .leftJoin('task_priority', 'tp', '"t".task_priority = tp.id');
     } catch (error) {
       throw new InternalServerErrorException(ERROR_MSG.SOMETHING_WENT_WRONG);
     }
@@ -207,15 +216,16 @@ export class TaskService {
         .addSelect('t.description', 'description')
         .addSelect('t.status_id', 'statusId')
         .addSelect('s.name', 'statusName')
-        .addSelect('t.priority', 'priority')
+        .addSelect('tp.priority', 'priority')
+        .addSelect('t.task_priority_id', 'taskPriorityId')
         .addSelect('u.name', 'assignedToName')
-        .addSelect('t.type', 'type')
+        .addSelect('t.task_type_id', 'taskTypeId')
         .addSelect('t.assigned_to', 'assignedTo')
         .addSelect('t.tags', 'tags')
         .addSelect('t.id', 'id')
         .leftJoin('users', 'u', '"u".id = t.assignedTo')
         .leftJoin('task_status', 's', '"s".id = t.status_id')
-
+        .leftJoin('task_priority', 'tp', '"t".task_priority = tp.id')
         .where(`t.id=${id}`)
         .getRawOne();
     } catch (error) {

@@ -3,8 +3,8 @@
 import { Entity, Column } from 'typeorm';
 import { BaseEntity } from './base';
 
-@Entity('task_status')
-export class TaskStatus extends BaseEntity {
+@Entity('task_type')
+export class TaskType extends BaseEntity {
   @Column({ type: 'varchar', nullable: false, name: 'name' })
   name: string;
 

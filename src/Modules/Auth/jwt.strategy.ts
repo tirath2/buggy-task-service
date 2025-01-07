@@ -1,10 +1,11 @@
 // src/auth/jwt.strategy.ts
 
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { jwtConstants } from './constant';
 import { decode } from 'jsonwebtoken';
+import { ERROR_MSG } from 'src/Utils/error-msg';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -19,12 +20,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(req: Request, payload: any) {
     const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
-
     const user = decode(token);
     (global as any).currentUser = user;
     (global as any).currentUserToken = token;
-    console.log({ token: user });
-    if (!token) throw new UnauthorizedException();
+
+    if (!token)
+      throw new HttpException(ERROR_MSG.LOGIN_FIRST, HttpStatus.UNAUTHORIZED);
     return payload;
   }
 }

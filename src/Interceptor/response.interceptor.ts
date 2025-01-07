@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { ERROR_MSG } from 'src/Utils/error-msg';
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
@@ -24,15 +25,19 @@ export class ResponseInterceptor implements NestInterceptor {
     const ctx = context.switchToHttp();
     const response = ctx.getResponse();
 
-    const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    let resStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+    let message = ERROR_MSG.SOMETHING_WENT_WRONG;
+    console.log(exception);
 
-    response.status(status).json({
+    if (exception instanceof HttpException) {
+      resStatus = exception.getStatus();
+      message = exception.message;
+    }
+
+    response.status(resStatus).json({
       status: false,
-      statusCode: status,
-      message: exception.message,
+      statusCode: resStatus,
+      message: message,
       result: exception,
     });
   }
